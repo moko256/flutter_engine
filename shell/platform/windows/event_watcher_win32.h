@@ -15,6 +15,7 @@ namespace flutter {
 class EventWatcherWin32 {
  public:
   explicit EventWatcherWin32(std::function<void()> callback);
+  explicit EventWatcherWin32(std::function<void()> callback, HANDLE handle);
   ~EventWatcherWin32();
 
   // Returns `HANDLE`, which can be used to register an event listener.

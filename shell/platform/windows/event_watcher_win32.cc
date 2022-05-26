@@ -7,9 +7,11 @@
 namespace flutter {
 
 EventWatcherWin32::EventWatcherWin32(std::function<void()> callback)
-    : callback_(callback) {
-  handle_ = CreateEvent(NULL, TRUE, FALSE, NULL);
+    : EventWatcherWin32(callback, CreateEvent(NULL, TRUE, FALSE, NULL)) {}
 
+EventWatcherWin32::EventWatcherWin32(std::function<void()> callback,
+                                     HANDLE handle)
+    : callback_(callback), handle_(handle) {
   RegisterWaitForSingleObject(&handle_for_wait_, handle_, &CallbackForWait,
                               reinterpret_cast<void*>(this), INFINITE,
                               WT_EXECUTEONLYONCE | WT_EXECUTEINWAITTHREAD);

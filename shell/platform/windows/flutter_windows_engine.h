@@ -19,6 +19,7 @@
 #include "flutter/shell/platform/windows/angle_surface_manager.h"
 #include "flutter/shell/platform/windows/flutter_project_bundle.h"
 #include "flutter/shell/platform/windows/flutter_windows_texture_registrar.h"
+#include "flutter/shell/platform/windows/low_memory_handler_win32.h"
 #include "flutter/shell/platform/windows/public/flutter_windows.h"
 #include "flutter/shell/platform/windows/settings_plugin.h"
 #include "flutter/shell/platform/windows/task_runner.h"
@@ -197,6 +198,9 @@ class FlutterWindowsEngine {
   // system changes.
   void SendSystemLocales();
 
+  // Send a memory warning to the engine.
+  void SendNotifyLowMemory();
+
   // The handle to the embedder.h engine instance.
   FLUTTER_API_SYMBOL(FlutterEngine) engine_ = nullptr;
 
@@ -238,6 +242,9 @@ class FlutterWindowsEngine {
 
   // The settings plugin.
   std::unique_ptr<SettingsPlugin> settings_plugin_;
+
+  // The low memory handler.
+  std::unique_ptr<LowMemoryHandlerWin32> low_memory_handler_;
 
   // Callbacks to be called when the engine (and thus the plugin registrar) is
   // being destroyed.

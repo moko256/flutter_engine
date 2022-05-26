@@ -335,6 +335,10 @@ bool FlutterWindowsEngine::RunWithEntrypoint(const char* entrypoint) {
   settings_plugin_->StartWatching();
   settings_plugin_->SendSettings();
 
+  low_memory_handler_ = std::make_unique<LowMemoryHandlerWin32>([this]() {
+    this->task_runner()->PostTask([this]() { this->SendNotifyLowMemory(); });
+  });
+
   return true;
 }
 
@@ -491,6 +495,10 @@ void FlutterWindowsEngine::SendSystemLocales() {
       [](const auto& arg) -> const auto* { return &arg; });
   embedder_api_.UpdateLocales(engine_, flutter_locale_list.data(),
                               flutter_locale_list.size());
+}
+
+void FlutterWindowsEngine::SendNotifyLowMemory() {
+  embedder_api_.NotifyLowMemoryWarning(engine_);
 }
 
 bool FlutterWindowsEngine::RegisterExternalTexture(int64_t texture_id) {
