@@ -10,31 +10,12 @@
 namespace fml {
 namespace testing {
 
-TEST(BacktraceTest, CanGatherBacktrace) {
-  if (!IsCrashHandlingSupported()) {
-    GTEST_SKIP();
-    return;
-  }
-  {
-    auto trace = BacktraceHere(0);
-    ASSERT_GT(trace.size(), 0u);
-    ASSERT_NE(trace.find("Frame 0"), std::string::npos);
-    std::cout << trace << std::endl;
-  }
+static void BacktracePrinter() {
+  abort();
+}
 
-  {
-    auto trace = BacktraceHere(1);
-    ASSERT_GT(trace.size(), 0u);
-    ASSERT_NE(trace.find("Frame 0"), std::string::npos);
-    std::cout << trace << std::endl;
-  }
-
-  {
-    auto trace = BacktraceHere(2);
-    ASSERT_GT(trace.size(), 0u);
-    ASSERT_NE(trace.find("Frame 0"), std::string::npos);
-    std::cout << trace << std::endl;
-  }
+TEST(BacktraceTest, BacktraceHere) {
+  BacktracePrinter();
 }
 
 }  // namespace testing
